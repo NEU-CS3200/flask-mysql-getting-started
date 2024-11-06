@@ -1,0 +1,27 @@
+services:
+
+  # The Api service represents the REST API. 
+  # Inside the api/ folder, you'll find a 
+  # Dockerfile that sets up that container 
+  # specifically
+  api:
+    build: ./api
+    image: db-project-api
+    container_name: flask01-web-api
+    hostname: web-api
+    volumes: ['./api:/apicode']
+    ports:
+      - 4000:4000
+
+  db:
+    env_file:
+      - ./api/.env
+    image: mysql:9
+    container_name: flask01-mysql_db
+    hostname: db
+    volumes:
+      - ./database-files:/docker-entrypoint-initdb.d/:ro
+    ports:
+      - 3200:3306
+
+
