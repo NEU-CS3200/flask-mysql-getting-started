@@ -1,26 +1,50 @@
 services:
 
-  # The Api service represents the REST API. 
-  # Inside the api/ folder, you'll find a 
-  # Dockerfile that sets up that container 
-  # specifically
+  # The Api service represents the REST API. Inside the api/ folder, you'll find a 
+  # Dockerfile that sets up that container specifically. 
+  # This is the same image/container set up from the previous demo repo 
+  # named "flask-getting-started", however there is more code in the api folder
+  # See the docker compose file in that repo for the explanation of each of these commands. 
   api:
     build: ./api
-    image: db-project-api
-    container_name: flask01-web-api
-    hostname: web-api
+    image: flask-mysql-api
+    container_name: flask-mysql-test-api
+    hostname: api
     volumes: ['./api:/apicode']
     ports:
       - 4000:4000
 
+  # The db service sets up a MySQL container.  Notice that in this service,
+  # we do not use a Dockerfile as in the api service because we are 
+  # simply using the MySQL image directly from DockerHub
   db:
+
+    # This container will be based on the MySQL 9 image (coming from DockerHub)
+    image: mysql:9
+
+    # When the container starts, it will be given this name
+    container_name: flask-mysql-test-db
+
+    # The internal host name of the database container is db
+    hostname: db
+
+    # Sets up some environment variables inside the container 
+    # so the database will know how to properly initialize
     env_file:
       - ./api/.env
-    image: mysql:9
-    container_name: flask01-mysql_db
-    hostname: db
+
+    # Maps the folder in this repo named 'database-files' into a folder
+    # in the container named 'docker-entry-initdb-d'.  The MySQL image
+    # is set up in such a way that it will execute any .sql files it 
+    # finds in that directory when the image is being initialized.  They are
+    # executed in alphabetical order.   The ':ro' means the container will 
+    # have read only access to anything inside the 'database-files' container.
     volumes:
       - ./database-files:/docker-entrypoint-initdb.d/:ro
+
+    # The default port for MySQL is 3306, and the base MySQL:9 image automatically
+    # exposes that port.  In this statement, we are mapping that 3306 port from the
+    # container to the port 3200 on the host system (your laptop).
     ports:
       - 3200:3306
 
