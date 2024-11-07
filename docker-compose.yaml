@@ -7,7 +7,6 @@ services:
   # See the docker compose file in that repo for the explanation of each of these commands. 
   api:
     build: ./api
-    image: flask-mysql-api
     container_name: flask-mysql-test-api
     hostname: api
     volumes: ['./api:/apicode']

@@ -1,8 +1,8 @@
-###
+#-----------------------------------------------------------
 # Main application interface
-###
+#-----------------------------------------------------------
 
-# import the create app function 
+# Import the create app function 
 # from backend/rest_entry.py
 from backend.rest_entry import create_app
 
